@@ -1,0 +1,14 @@
+{
+  "name": "Cebit14_demo",
+  "version": "0.1.0",
+  "description": "Cebit demo event management system",
+  "main": "app.js",
+  "repository": "",
+  "author": "Hauke Petersen <hauke.petersen@fu-berlin.de",
+  "license": "GPLv2",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "socket.io": "*",
+    "express": "*"
+  }
+}
