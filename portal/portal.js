@@ -6,7 +6,7 @@
  */
 
 /**
- * @fileoverview    This portal acts as a backend of a reduced border router for the RIOT cebit demo.
+ * @fileoverview    This portal acts as a back-end of a reduced border router for the RIOT CeBIT demo.
  * 
  * @date            Feb 2014
  * @author          Hauke Petersen <hauke.petersen@fu-berlin.de>
@@ -17,7 +17,7 @@
  */
 const DEFAULT_HOST = 'localhost';               /* host address for the demo server */
 const DEFAULT_PORT = 11111;                     /* host port for the demo server */
-const DEFAULT_UART = '/dev/ttyUSB0';            /* defeul serial port connected to a msba2 */
+const DEFAULT_UART = '/dev/ttyUSB0';            /* default serial port connected to a msba2 */
 
 /**
  * Library imports
@@ -35,7 +35,7 @@ var port = DEFAULT_PORT;
 var dev = DEFAULT_UART;
 var socket = new JsonSocket(new net.Socket());  /* connection to the demo host */
 var isConnected = false;                        /* flag signals when connected to the host */
-var uart;
+var uart = null;
 
 /**
  * Parse serial port, host and port from command line arguments
@@ -92,34 +92,18 @@ socket.on('error', function() {
  */
 socket.on('message', function(data) {
     console.log('DATA:    ' + data.data);
-    uart.write("fw " + data.dst + " " + data.id + " " + data.data\n);
+    uart.write("fw " + data.dst + " " + data.id + " " + data.data + "\n");
 });
 
 /**
- * Bootstrapping and starting the reporter
- */
-console.log("RIOT Portal - Cebit edition");
-console.log("Usage: $node portal.js [DEV] [HOST] [PORT]");
-parseCommandLineArgs();
-console.log("INFO:   Opening RIOT at " + dev + " and socket to " + host + ":" + port);
-connect();
-uart = new SerialPort(dev, {
-    'baudrate': 115200, 
-    'databits': 8, 
-    'parity': 'none', 
-    'stopbits': 1, 
-    'parser': serialPort.parsers.readline("\n")},
-    false);                                     /* connection to the sensor node over UART */
-
-
-/**
- * Parse a line from the serial port into a json object.
+ * Parse a line from the serial port into a JSON object.
  * Format {'id': BYTE0, 'data': BYTE1, 'time': Date.currentTime()}
  */
 function parseEvent(data) {
-    var res = {};
-    if (data.match(/^FW:\s+\d+\s+\d+\s+\d+\s?/)) {
+    var res = null;
+    if (data.match(/^FW: \d+ \d+ \d+\s?/)) {
         var split = data.split(" ");
+        res = {};
         res.src = parseInt(split[1]);
         res.id = parseInt(split[2]);
         res.data = parseInt(split[3]);
@@ -129,34 +113,34 @@ function parseEvent(data) {
 }
 
 /**
+ * Bootstrapping and starting the portal
+ */
+console.log("RIOT Portal - CeBIT edition");
+console.log("Usage: $node portal.js [DEV] [HOST] [PORT]");
+parseCommandLineArgs();
+console.log("INFO:   Opening RIOT at " + dev + " and socket to " + host + ":" + port);
+connect();
+
+/**
  * Open the serial port.
  * (event handlers for the serial port)
  */
+var uart = new SerialPort(dev, {
+        'baudrate': 115200, 
+        'databits': 8, 
+        'parity': 'none', 
+        'stopbits': 1, 
+        'parser': serialPort.parsers.readline("\n")
+    },
+    false);                                     /* connection to the sensor node over UART */
+
 uart.open(function() {
     console.log('SERIAL: Connection opened - portal open for data travel');
     uart.on('data', function(data){
-        console.log('UART:    ' + data);
-        if (isConnected) {
-            data = parseEvent(data);
+        console.log('UART:   ' + data);
+        data = parseEvent(data);
+        if (data && isConnected) {
             socket.sendMessage(data);
         }
     });
 });
-
-
-// test cases for event parsing
-// var t1 = [
-//     "FW: 12 23 88",
-//     "NO: 12 23 88",
-//     " FW: 32 32 32",
-//     "FW: 986 aa 88",
-//     "-FW: aa 99 23",
-//     "FW: 8 21 0 99",
-//     "FW: 12312 1288381 111",
-//     "23"];
-
-// t1.forEach(function(test){
-//     console.log("Test: " + test);
-//     console.log(parseEvent(test));
-//     console.log("--------");
-// });
