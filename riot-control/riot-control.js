@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2013 Freie Universität Berlin
  *
@@ -16,13 +17,14 @@
  * Configuration
  */
 const PORTAL_PORT = 11111;                      /* port opened for incoming portals */
-const WEB_PORT = 9999;                         /* port to the rest of the verse */
+const WEB_PORT = 9999;                          /* port to the rest of the verse */
 const WEBROOT = __dirname + '/webroot/';        /* path to the folder containing the web files */
 const DATAROOT = __dirname + '/data/';          /* path to the database files */
 
 /**
  * Library imports
  */
+var fs = require('fs');
 var net = require('net');
 var JsonSocket = require('json-socket');
 var express = require('express');
@@ -65,7 +67,11 @@ app.use('/js', express.static(WEBROOT));
 app.use('/css', express.static(WEBROOT));
 app.use(express.favicon(WEBROOT + 'favicon.ico'));
 app.get('/*', function(req, res) {
-    res.sendfile(WEBROOT + 'index.html');
+    if (req.params[0]) {
+        res.sendfile(WEBROOT + req.params[0]);
+    } else {
+        res.sendfile(WEBROOT + 'index.html');
+    }
 });
 
 /**
@@ -123,4 +129,3 @@ httpServer.listen(web_port, function() {
 portal_socket.listen(portal_port, function() {
     console.info('PORTAL:    Listening on port ' + portal_port);
 });
-

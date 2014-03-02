@@ -1,8 +1,8 @@
 {
-  "name": "TheSpace",
+  "name": "RIOT-control",
   "version": "0.1.0",
   "description": "Web backend for the RIOT Cebit demo",
-  "main": "space.js",
+  "main": "riot-control.js",
   "repository": "git@haukepetersen/Demos.git",
   "author": "Hauke Petersen <hauke.petersen@fu-berlin.de",
   "license": "GPLv2",
