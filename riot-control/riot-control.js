@@ -62,7 +62,7 @@ function parseCommandLineArgs() {
 /**
  * configure web server, setup of static and dynamic routes
  */
-app.use('/img', express.static(WEBROOT));
+app.use('/img', express.static(WEBROOT + 'img/'));
 app.use('/js', express.static(WEBROOT));
 app.use('/css', express.static(WEBROOT));
 app.use(express.favicon(WEBROOT + 'favicon.ico'));

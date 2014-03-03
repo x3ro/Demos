@@ -1,0 +1,47 @@
+
+
+body {
+    padding-top: 70px;
+    padding-bottom: 40px;
+}
+
+#head-logo {
+    height:30px;
+    top: -10px;
+}
+
+#riot-events {
+
+}
+
+#footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom:0;
+    height: 40px;
+    background-color: #ffffff;
+}
+
+#footer .logo {
+    float: left;
+}
+#footer .partners {
+    margin-left: 100px;
+    float: left;
+}
+#footer .sponsors {
+    float: right;
+}
+
+#footer > .logo > img {
+    margin: 5px 15px;
+    margin: 5px;
+    height: 30px;
+}
+
+#footer > .sponsors > img, #footer > .partners > img {
+    margin: 5px 10px;
+    width: auto;
+    height: 25px;
+}
