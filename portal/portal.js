@@ -91,8 +91,9 @@ socket.on('error', function() {
  * Handle incoming traffic (and commands to the MSBA2)
  */
 socket.on('message', function(data) {
-    console.log('DATA:    ' + data.data);
-    uart.write("fw " + data.dst + " " + data.id + " " + data.data + "\n");
+    var line = "fw " + data.dst + " " + data.id + " " + data.data + "\n";
+    uart.write(line);
+    process.stdout.write("WRITE: " + line);
 });
 
 /**
@@ -101,7 +102,7 @@ socket.on('message', function(data) {
  */
 function parseEvent(data) {
     var res = null;
-    if (data.match(/^FW: \d+ \d+ \d+\s?/)) {
+    if (data.match(/^fw: \d+ \d+ \d+\s?/)) {
         var split = data.split(" ");
         res = {};
         res.src = parseInt(split[1]);
@@ -116,9 +117,9 @@ function parseEvent(data) {
  * Bootstrapping and starting the portal
  */
 console.log("RIOT Portal - CeBIT edition");
-console.log("Usage: $node portal.js [DEV] [HOST] [PORT]");
+console.log("Usage: $node portal.js [DEV] [HOST] [PORT]\n");
 parseCommandLineArgs();
-console.log("INFO:   Opening RIOT at " + dev + " and socket to " + host + ":" + port);
+console.log("INFO:   Opening RIOT at " + dev + " and socket to " + host + ":" + port + "\n");
 connect();
 
 /**
@@ -137,7 +138,7 @@ var uart = new SerialPort(dev, {
 uart.open(function() {
     console.log('SERIAL: Connection opened - portal open for data travel');
     uart.on('data', function(data){
-        console.log('UART:   ' + data);
+        console.log('READ:  ' + data);
         data = parseEvent(data);
         if (data && isConnected) {
             socket.sendMessage(data);
