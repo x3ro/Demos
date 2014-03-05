@@ -3,28 +3,95 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RIOT control</title>
+    <title>RIOT control </title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body>
 
-    <h2>Hello World</h2>
-      <input id="sendstring-dst" type="text" value="27" />
-      <input id="sendstring-id" type="text" value="5" />
-      <input id="sendstring-data" type="text" value="0" />
-      <button id="sendstring">Send</button>
+    <div class="container-fluid">
 
-    <h2>Events</h2>
-    <div id="events">
+      <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div>
+            
+            <a class="navbar-brand" href="#"><img id="head-logo" src="img/logo_riot.png" alt="riot-logo" /></a>
+          </div>
+        </div>
+        <div class="navbar-collapse collapse navbar-inverse-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">RIOT-Control</a></li>
+          </ul>
 
-      <div class="event">0: Event abc - 23.04.2014|23:32:59</div>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a id="cmd-portal-reset" href="#">Reset Portal</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Events <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a id="cmd-evt-clear" href="#">Clear Events</a></li>
+                <li class="divider"></li>
+                <li><a id="cmd-evt-confirm" href="#">Confirm last event</a></li>
+                <li><a id="cmd-evt-alarm" href="#">Alarm</a></li>
+                <li><a id="cmd-evt-warn" href="#">Warning</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <h3>RIOT Event System</h3>
+          
+          <div id="riot-events">
+          
+          </div>
+          
+        </div>
+        <div class="col-md-8">
+        <h3>RIOT-TV</h3>
+          <div id="riot-tv"></div>
+        
+        </div>
+      </div>
 
     </div>
 
 
+    <div id="footer">
+      <div class="logo">
+        <img clas="main-logo" src="img/logo_safest.png" alt="SAFEST logo" />
+      </div>
+      <div class="partners">
+        Partners:
+        <img src="img/logo_ber.png" alt="BER logo" />
+        <img src="img/logo_davico.png" alt="Davico logo" />
+        <img src="img/logo_forum.png" alt="FOS logo" />
+        <img src="img/logo_frauenhofer.png" alt="Frauenhofer logo" />
+        <img src="img/logo_fu.png" alt="FU Berlin logo" />
+        <img src="img/logo_haw.png" alt="HAW logo" />
+        <img src="img/logo_inria.png" alt="INRIA logo" />
+        <img src="img/logo_sagem.png" alt="Sagem logo" />
+      </div>
+      <div class="sponsors">
+        Sponsored by:
+        <img src="img/logo_anr.png" alt="ANR logo" />
+        <img src="img/logo_bmbf.png" alt="BMBF logo" />
+      </div>
+    <div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/jquery-2.10.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sigma-0.1.js"></script>
+    <script src="js/sigma.fisheye.js"></script>
+    <script src="js/sigma.change.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

@@ -23,6 +23,7 @@ const EVT_ALARM             = 4;
 const EVT_CONFIRM           = 5;
 const EVT_WARN              = 6;
 const EVT_DISARMED          = 7;
+const EVT_RESET             = 8;
 
 /**
  * Some global variables
@@ -93,6 +94,7 @@ $(document).ready(function() {
  * Set bindings for buttons etc.
  */
 function bindCommands() {
+    $("#cmd-portal-reset").click(cmd_portalReset);
     $("#cmd-evt-clear").click(cmd_clearEvents);
     $("#cmd-evt-alarm").click(cmd_alarm);
     $("#cmd-evt-warn").click(cmd_warn);
@@ -372,6 +374,11 @@ function evt_confirm(evt) {
 /**
  * Commands
  */
+function cmd_portalReset() {
+    var evt = {'src': 99, 'id': EVT_RESET, 'data': 0, 'dst': 23};
+    socket.emit('event', evt);
+}
+
 function cmd_clearEvents() {
     $("#riot-events").empty();
 }
