@@ -24,6 +24,20 @@ const LAYOUTFILE = LAYOUTDIR + 'cebit.json';    /* Layout to use for this app */
 //const DATAROOT = __dirname + '/data/';          /* path to the database files */
 
 /**
+ * Event IDs
+ */
+const VIZ_PARENT_SELECT     = 0;
+const VIZ_PARENT_DESELECT   = 1;
+const VIZ_DIO_RCVD          = 2;
+const VIZ_DTA_RCVD          = 3;
+const EVT_ALARM             = 4;
+const EVT_CONFIRM           = 5;
+const EVT_WARN              = 6;
+const EVT_DISARMED          = 7;
+const EVT_RESET             = 8;
+
+
+/**
  * List of nodes that are interested into events
  */
 const listen_nodes = [51, 61];
@@ -129,7 +143,7 @@ function cli_onConnect(sock) {
     rpl_parents['31'] = 23;
     rpl_parents['23'] = 'web';
     for (var src in rpl_parents) {
-        sock.emit('event', {'id': 0, 'data': rpl_parents[src], 'src': src});
+        sock.emit('event', {'id': VIZ_PARENT_SELECT, 'data': rpl_parents[src], 'src': src});
     };
 };
 
@@ -145,12 +159,23 @@ function cli_onEvent(data) {
     if (data.data == 0) {
         data.data = next_evt_id++;
     }
-    // send on event per listener to the portal
+    // if evt is RESET and target is portal clear rpl_parents
+    if (data.id == EVT_RESET && data.dst == 23) {
+        for (var src in rpl_parents) {
+            io.sockets.emit('event', {'id': VIZ_PARENT_DESELECT, 'data': rpl_parents[src], 'src': src});
+        }
+        rpl_parents = {};
+    }
+
     if (portal_client) {
-        listen_nodes.forEach(function(address) {
-            data.dst = address;
+        if (data.dst) {
             portal_client.sendMessage(data);
-        });
+        } else {            // send on event per listener to the portal
+            listen_nodes.forEach(function(address) {
+                data.dst = address;
+                portal_client.sendMessage(data);
+            });
+        }
     }
     // propagate event to web-listeners
     data.dst = 99;
