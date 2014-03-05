@@ -102,7 +102,7 @@ socket.on('message', function(data) {
  */
 function parseEvent(data) {
     var res = null;
-    if (data.match(/^fw: \d+ \d+ \d+\s?/)) {
+    if (data.match(/^fw \d+ \d+ \d+\s?/)) {
         var split = data.split(" ");
         res = {};
         res.src = parseInt(split[1]);
