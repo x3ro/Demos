@@ -17,6 +17,7 @@
  * Configuration
  */
 const PORTAL_PORT = 11111;                      /* port opened for incoming portals */
+const VIZ_PORT = 22222;                         /* port opened for incoming viz-proxies */
 const WEB_PORT = 9999;                          /* port to the rest of the verse */
 const WEBROOT = __dirname + '/webroot/';        /* path to the folder containing the web files */
 const LAYOUTDIR = __dirname + '/layouts/';      /* path to the folder containing the layouts */
@@ -59,10 +60,13 @@ var next_evt_id = 1;
  * Global variables
  */
 var portal_port = PORTAL_PORT;
+var viz_port = VIZ_PORT;
 var web_port = WEB_PORT;
 var portal_socket = net.createServer();
+var viz_socket = net.createServer();
 var portal_client = null;
 var layout = null;
+var native_clients = {};
 
 /**
  * Parse command line arguments: portal port and web port 
@@ -77,6 +81,9 @@ function parseCommandLineArgs() {
             break;
             case 3:
                 portal_port = arg;
+            break;
+            case 4:
+                viz_port = arg;
             break;
         }
     });
@@ -135,9 +142,9 @@ function cli_onConnect(sock) {
     // parse layout file
     sock.emit('init', layout);
     // send known RPL connection information
-    rpl_parents['51'] = 32;
-    rpl_parents['61'] = 32;
-    rpl_parents['41'] = 33;
+    rpl_parents['51'] = 33;
+    rpl_parents['61'] = 23;
+    rpl_parents['41'] = 32;
     rpl_parents['32'] = 31;
     rpl_parents['33'] = 31;
     rpl_parents['31'] = 23;
@@ -203,13 +210,23 @@ portal_socket.on('connection', function(socket) {
     }
 });
 
-
+/**
+ * Bootstrap server socket to visualization back-ends.
+ */
+viz_socket.on('connection', function(socket) {
+    console.log("VIZ:       New connection from "   // REMOVE
+            + socket.address().address + ":" + socket.address().port);
+    socket = new JsonSocket(socket);
+    socket.on('message', function(evt) {
+        io.sockets.emit('event', evt);
+    });
+});
 
 /**
  * Bootstrapping and starting the reporter
  */
 console.log("RIOT data sink - CeBIT edition");
-console.log("Usage: $node space.js [WEB_PORT] [PORTAL_PORT]\n");
+console.log("Usage: $node riot-control.js [WEB_PORT] [PORTAL_PORT] [VIZ_PORT]\n");
 parseCommandLineArgs();
 httpServer.listen(web_port, function() {
     console.info('WEBSERVER: Listening on port ' + web_port);
@@ -217,3 +234,6 @@ httpServer.listen(web_port, function() {
 portal_socket.listen(portal_port, function() {
     console.info('PORTAL:    Listening on port ' + portal_port);
 });
+viz_socket.listen(viz_port, function() {
+    console.info('VIZ:       Listening on port ' + viz_port);
+})

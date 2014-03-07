@@ -33,11 +33,6 @@ var socket = undefined;
 var isConnected = false;
 var stats = {};                 // object saves status information about nodes, as parent, rank and message counter
 var ignoreList = {};            // a list containing ignored edges, events on those will not be displayed
-// keep track of reporters and stations
-var reporters = {};
-var activeReporters = {};
-var stations = {};
-var activeStation;
 
 // show a popup when hovering graph nodes
 var popUp;
@@ -48,7 +43,7 @@ var popUp;
 var colors = {
     'rpl_parent':   '#004CFF',
     'rpl_dio':      '#004CFF',
-    'udp':          '#54E600',
+    'udp':          '#B3FA00',
     'color0':  '#004CFF',       // blue (fast) fading arrow (-> send DIO)
     'color1':  '#FFCC00',       // orange (fast) fading arrow (-> send TVO upwards: TRAIL request)
     'color2':  '#54E600',       // green (fast) fading arrow (-> send TVO downwards: TRAIL reply)
@@ -169,7 +164,7 @@ function showNodeInfo(evt) {
       },[evt.content[0]]);
     var data = stats[node.id];
     var html = '<div class="popup"><ul>';
-    html += '<li>Rank: ' + data.rank + '</li>';
+    html += '<li>Address: ' + data.address + '</li>';
     html += '<li>Parent: ' + data.parent + '</li>';
     html += '<li>Root: ' + data.root + '</li>';
     html += '<li>Send: ' + data.send + '</li>';
@@ -195,7 +190,7 @@ function hideNodeInfo(evt) {
 function onInit(data) {
     if (data) {
         data.nodes.forEach(function(n) {
-            stats[n.id] = {'rank': '-', 'parent': '-', 'root': '-', 'send': 0, 'rec': 0};
+            stats[n.id] = {'address': n.id, 'rank': '-', 'parent': '-', 'root': '-', 'send': 0, 'rec': 0};
             graph.addNode(n.id, n.params);
         });
         data.edges.forEach(function(e) {
@@ -370,7 +365,6 @@ function evt_confirm(evt) {
 }
 
 
-
 /**
  * Commands
  */
@@ -408,118 +402,4 @@ function cmd_confirm(id) {
     }
     // send out event
     socket.emit('event', evt);
-}
-
-
-/**
- * @brief   This method is called everytime an update to the displaying graph is required.
- *
- * @param data      Object {'hopsrc': ..., 'hopdst': ..., group: , type: , and more}
- */
-function onUpdate(data) {
-    // hack to emulate the gw on 'sn16':
-    if (data.hopsrc == 'sn16') {
-        data.hopsrc = 'gw';
-    } else if (data.hopdst == 'sn16') {
-        data.hopdst = 'gw';
-    }
-    switch (data.group) {
-        case 'rpl':
-        switch (data.type) {
-            case 'parent_select':
-                event_ps(data);
-            break;
-            case 'parent_delete':
-                event_pd(data);
-            break;
-            default:
-                event_m(data);
-            break;
-        }
-        break;
-        case 'cam':
-            data.payload = "#color20";
-            event_m(data);
-        break;
-        case 'evt':
-            data.payload = "#color30";
-            event_m(data);
-        break;
-    }
-    
-    if (data.group == "rpl") {
-    }
-};
-
-function event_m(evt) {
-    // check if the edge in question is on the ignore list
-    //var ignoretest = evt.hopsrc + "_" + evt.hopdst;
-    var ignoretest = evt.hopdst + "_" + evt.hopsrc;
-    if (ignoreList[ignoretest]) {
-        return;
-    }
-    stats[evt.hopsrc].send ++;
-    stats[evt.hopdst].rec ++;
-
-    
-    console.log("event in event_m");
-    var id = evt.hopsrc + "_" + evt.hopdst + "-" + evt.payload;
-    switch (evt.payload) {
-        case "#color0":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color0, fading.fast, 30, 0);
-        break;
-        case "#color1":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color1, fading.fast, 30, 0);
-        break;
-        case "#color2":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color2, fading.fast, 30, 0);
-        break;
-        case "#color3":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color3, fading.normal, 30, 0);
-        break;
-        case "#color4":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color4, fading.normal, 30, 0);
-        break;
-        case "#color5":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color5, fading.normal, 30, 0);
-        case "#color6":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color6, fading.normal, 30, 0);
-        break;
-        case "#color7":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color7, fading.normal, 30, 0);
-        break;
-        case "#color8":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color8, fading.normal, 30, 0);
-        break;
-        case "#color9":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color9, fading.normal, 30, 0);
-        break;
-        case "#color10":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color10, fading.normal, 30, 0);
-        break;
-        case "#color11":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color11, fading.normal, 30, 0);
-        break;
-        case "#color15":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color15, fading.normal, 30, 0);
-        break;
-        case "#color20":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color20, fading.normal, 30, 0);
-        break;
-        case "#color30":
-            graph.fadeLink(evt.hopsrc, evt.hopdst, id, colors.color30, fading.normal, 30, 0);
-        break;
-    }
-};
-
-function event_ps(evt) {
-    var id = evt.hopdst + "_" + evt.hopsrc + "-parent";
-    stats[evt.hopdst].parent = evt.hopsrc;
-    graph.showLink(evt.hopdst, evt.hopsrc, id, colors.color15, fading.fast, 5);
-};
-
-function event_pd(evt) {
-    var id = evt.hopdst + "_" + evt.hopsrc + "-parent";
-    stats[evt.hopdst].parent = '-';
-    graph.hideLink(id, fading.fast);
 }
