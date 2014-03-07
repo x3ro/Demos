@@ -1,0 +1,13 @@
+{
+  "name": "native_test",
+  "version": "0.1.0",
+  "description": "Start native clients in the command line",
+  "main": "native_test.js",
+  "repository": "",
+  "author": "Hauke Petersen <hauke.petersen@fu-berlin.de",
+  "license": "GPLv2",
+  "readmeFilename": "README.md",
+  "dependencies": {
+
+  }
+}
