@@ -79,9 +79,9 @@ var fading = {                  // fading speed in ms
  */
 $(document).ready(function() {
     calcSizes();
+    initGraph();
     bindCommands();
     initSocket();
-    initGraph();
     $(window).resize(calcSizes);
 });
 
@@ -123,7 +123,6 @@ function initSocket() {
 
     // old stuff
     socket.on('ignore', onIgnore);
-    socket.on('update', onUpdate);
 };
 
 /**
