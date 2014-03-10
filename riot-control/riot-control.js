@@ -41,7 +41,7 @@ const EVT_RESET             = 8;
 /**
  * List of nodes that are interested into events
  */
-const listen_nodes = [51, 61];
+const listen_nodes = [51];
 
 /**
  * Library imports
@@ -53,7 +53,14 @@ var express = require('express');
 var app = express();
 var httpServer = require('http').createServer(app);
 var io = require('socket.io').listen(httpServer);
-var rpl_parents = {};                           /* save rpl connection information */
+var rpl_parents = {};                           // save rpl connection information
+rpl_parents['23'] = 'web';                      // set static route to web
+rpl_parents['51'] = 33;
+rpl_parents['61'] = 23;
+rpl_parents['41'] = 33;
+rpl_parents['32'] = 33;
+rpl_parents['33'] = 31;
+rpl_parents['31'] = 23;
 var next_evt_id = 1;
 
 /**
@@ -87,6 +94,31 @@ function parseCommandLineArgs() {
             break;
         }
     });
+}
+
+/**
+ * Make console output look better: translate ID's to strings.
+ */
+function idToString(id)
+{
+    switch (id) {
+        case VIZ_PARENT_SELECT:
+            return 'VIZ_PARENT_SELECT';
+        case VIZ_PARENT_DESELECT:
+            return 'VIZ_PARENT_DESELECT';
+        case VIZ_DIO_RCVD:
+            return 'VIZ_DIO_RCVD';
+        case VIZ_DTA_RCVD:
+            return 'VIZ_DTA_RCVD';
+        case EVT_ALARM:
+            return 'EVT_ALARM';
+        case EVT_CONFIRM:
+            return 'EVT_CONFIRM';
+        case EVT_WARN:
+            return 'EVT_WARN';
+        default:
+            return 'UNKNOWN_ID';
+    }
 }
 
 /**
@@ -130,7 +162,6 @@ io.set('log level', 0);
 io.sockets.on('connection', function(socket) {
     console.log("WEBSOCKET: New connection from "   // REMOVE
         + socket.handshake.address.address + ":" + socket.handshake.address.port);
-    socket.on('reset', cli_onReset);
     socket.on('event', cli_onEvent);
     cli_onConnect(socket);
 });
@@ -142,36 +173,20 @@ function cli_onConnect(sock) {
     // parse layout file
     sock.emit('init', layout);
     // send known RPL connection information
-    rpl_parents['51'] = 33;
-    rpl_parents['61'] = 23;
-    rpl_parents['41'] = 32;
-    rpl_parents['32'] = 31;
-    rpl_parents['33'] = 31;
-    rpl_parents['31'] = 23;
-    rpl_parents['23'] = 'web';
     for (var src in rpl_parents) {
         sock.emit('event', {'id': VIZ_PARENT_SELECT, 'data': rpl_parents[src], 'src': src});
     };
 };
 
-function cli_onReset(data) {
-    // do some resetting
-    rpl_parents = {};
-};
-
 function cli_onEvent(data) {
-    console.log("WEBSOCKET: Received data:");   // REMOVE
-    console.log(data);                          // REMOVE
+    console.log("WEBSOCKET: Received - src:", data.src, " id:", idToString(data.id), " data:", data.data);   // REMOVE
     // add event id
     if (data.data == 0) {
         data.data = next_evt_id++;
     }
     // if evt is RESET and target is portal clear rpl_parents
     if (data.id == EVT_RESET && data.dst == 23) {
-        for (var src in rpl_parents) {
-            io.sockets.emit('event', {'id': VIZ_PARENT_DESELECT, 'data': rpl_parents[src], 'src': src});
-        }
-        rpl_parents = {};
+        cli_onReset();
     }
 
     if (portal_client) {
@@ -199,9 +214,13 @@ portal_socket.on('connection', function(socket) {
             + socket.address().address + ":" + socket.address().port);
         portal_client = new JsonSocket(socket);
         portal_client.on('message', function(evt) {
-            console.log("PORTAL:    Received data:")    // REMOVE
-            console.log(evt);                           // REMOVE
+            console.log("PORTAL:    Received - src:", evt.src, " id:", idToString(evt.id), " data:", evt.data);   // REMOVE
             io.sockets.emit('event', evt);
+            // add visualization stuff
+            if (evt.id == EVT_ALARM || evt.id == EVT_CONFIRM || evt.id == EVT_WARN) {
+                var viz = {'id': VIZ_DTA_RCVD, 'src': 23, 'data': 'web'};
+                io.sockets.emit('event', viz);
+            }
         });
         portal_client.on('close', function(e) {
             portal_client = null;
@@ -218,6 +237,7 @@ viz_socket.on('connection', function(socket) {
             + socket.address().address + ":" + socket.address().port);
     socket = new JsonSocket(socket);
     socket.on('message', function(evt) {
+        console.log("VIZ:       Received - src:", evt.src, " id:", idToString(evt.id), " data:", evt.data);   // REMOVE
         io.sockets.emit('event', evt);
     });
 });

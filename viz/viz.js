@@ -26,6 +26,7 @@ var net = require('net');
 var JsonSocket = require('json-socket');
 var serialPort = require('serialport');
 var SerialPort = serialPort.SerialPort;
+var readline = require('readline');
 
 /**
  * Global variables
@@ -36,6 +37,7 @@ var dev = DEFAULT_UART;
 var socket = new JsonSocket(new net.Socket());  /* connection to the demo host */
 var isConnected = false;                        /* flag signals when connected to the host */
 var uart = null;
+var rl = readline.createInterface({'input': process.stdin, 'output': process.stdout});
 
 /**
  * Parse serial port, host and port from command line arguments
@@ -103,6 +105,15 @@ function parseEvent(data) {
     }
     return res;
 }
+
+/**
+ * Connect UART to std-in
+ */
+rl.on('line', function(data) {
+    if (uart) {
+        uart.write(data + '\n');
+    }
+});
 
 /**
  * Bootstrapping and starting the viz-proxy

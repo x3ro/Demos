@@ -20,12 +20,26 @@ const DEFAULT_PORT = 11111;                     /* host port for the demo server
 const DEFAULT_UART = '/dev/ttyUSB0';            /* default serial port connected to a msba2 */
 
 /**
+ * Event IDs
+ */
+const VIZ_PARENT_SELECT     = 0;
+const VIZ_PARENT_DESELECT   = 1;
+const VIZ_DIO_RCVD          = 2;
+const VIZ_DTA_RCVD          = 3;
+const EVT_ALARM             = 4;
+const EVT_CONFIRM           = 5;
+const EVT_WARN              = 6;
+const EVT_DISARMED          = 7;
+const EVT_RESET             = 8;
+
+/**
  * Library imports
  */
 var net = require('net');
 var JsonSocket = require('json-socket');
 var serialPort = require('serialport');
 var SerialPort = serialPort.SerialPort;
+var readline = require('readline');
 
 /**
  * Global variables
@@ -36,6 +50,7 @@ var dev = DEFAULT_UART;
 var socket = new JsonSocket(new net.Socket());  /* connection to the demo host */
 var isConnected = false;                        /* flag signals when connected to the host */
 var uart = null;
+var rl = readline.createInterface({'input': process.stdin, 'output': process.stdout});
 
 /**
  * Parse serial port, host and port from command line arguments
@@ -94,6 +109,12 @@ socket.on('message', function(data) {
     var line = "fw " + data.dst + " " + data.id + " " + data.data + "\n";
     uart.write(line);
     process.stdout.write("WRITE: " + line);
+    if (data.id == EVT_ALARM || data.id == EVT_CONFIRM || data.id == EVT_WARN) {
+        var viz = {'id': VIZ_DTA_RCVD, 'data': 23, 'src': 'web'};
+        if (isConnected) {
+            socket.sendMessage(viz);
+        }
+    }
 });
 
 /**
@@ -102,7 +123,7 @@ socket.on('message', function(data) {
  */
 function parseEvent(data) {
     var res = null;
-    if (data.match(/^fw \d+ \d+ \d+\s?/)) {
+    if (data.match(/^bw \d+ \d+ \d+\s?/)) {
         var split = data.split(" ");
         res = {};
         res.src = parseInt(split[1]);
@@ -112,6 +133,15 @@ function parseEvent(data) {
     }
     return res;
 }
+
+/**
+ * Connect UART to std-in
+ */
+rl.on('line', function(data) {
+    if (uart) {
+        uart.write(data + '\n');
+    }
+});
 
 /**
  * Bootstrapping and starting the portal
