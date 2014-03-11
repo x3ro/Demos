@@ -264,8 +264,8 @@ function evt_pdesel(evt) {
  */
 function evt_dio(evt) {
     var id = evt.src + "_" + evt.data + "-dio";
-    stats[evt.data].send ++;
-    stats[evt.src].rec ++;
+    stats[evt.src].send ++;
+    stats[evt.data].rec ++;
     graph.fadeLink(evt.src, evt.data, id, colors.rpl_dio, fading.fast, 30, 0);
 }
 
@@ -274,8 +274,8 @@ function evt_dio(evt) {
  */
 function evt_udp(evt) {
     var id = evt.src + "_" + evt.data + "-udp";
-    stats[evt.data].send ++;
-    stats[evt.src].rec ++;
+    stats[evt.src].send ++;
+    stats[evt.data].rec ++;
     graph.fadeLink(evt.src, evt.data, id, colors.udp, fading.fast, 30, 0);
 }
 
@@ -347,6 +347,9 @@ function evt_confirm(evt) {
         box = $("#riot-events > div:first");
     } else {
         box = $("#event-" + evt.data);
+    }
+    if (box.length == 0) {
+        box = $("#riot-events > div:first");
     }
 
     var newbox = box.clone();

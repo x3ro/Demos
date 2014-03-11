@@ -211,11 +211,11 @@ function cli_onEvent(data) {
  */
 portal_socket.on('connection', function(socket) {
     if (!portal_client) {
-        console.log("PORTAL:    New connection from "   // REMOVE
+        console.log("PORTAL:    New connection from "
             + socket.address().address + ":" + socket.address().port);
         portal_client = new JsonSocket(socket);
         portal_client.on('message', function(evt) {
-            console.log("PORTAL:    Received - src:", evt.src, " id:", idToString(evt.id), " data:", evt.data);   // REMOVE
+            console.log('PORTAL:    Received ' + idToString(evt.id) + ': ', evt);
             io.sockets.emit('event', evt);
             // add visualization stuff
             if (evt.id == EVT_ALARM || evt.id == EVT_CONFIRM || evt.id == EVT_WARN) {
@@ -234,11 +234,10 @@ portal_socket.on('connection', function(socket) {
  * Bootstrap server socket to visualization back-ends.
  */
 viz_socket.on('connection', function(socket) {
-    console.log("VIZ:       New connection from "   // REMOVE
-            + socket.address().address + ":" + socket.address().port);
+    console.log("VIZ:       New connection from " + socket.address().address + ":" + socket.address().port);
     socket = new JsonSocket(socket);
     socket.on('message', function(evt) {
-        console.log("VIZ:       Received - src:", evt.src, " id:", idToString(evt.id), " data:", evt.data);   // REMOVE
+        console.log('VIZ:       Received ' + idToString(evt.id) + ': ', evt);
         io.sockets.emit('event', evt);
     });
 });
