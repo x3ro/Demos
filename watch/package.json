@@ -1,0 +1,14 @@
+{
+  "name": "cebit_watch",
+  "version": "0.1.0",
+  "description": "Watch application",
+  "main": "watch.js",
+  "repository": "",
+  "author": "Hauke Petersen <hauke.petersen@fu-berlin.de",
+  "license": "GPLv2",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "json-socket": ">=0.1.2",
+    "serialport": "*"
+  }
+}
