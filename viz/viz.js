@@ -144,6 +144,7 @@ uart.open(function() {
         data = parseEvent(data);
         if (data && isConnected) {
             socket.sendMessage(data);
+            console.log('VIZ:   send', data);
         }
     });
 });
