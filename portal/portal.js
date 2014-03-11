@@ -18,6 +18,7 @@
 const DEFAULT_HOST = 'localhost';               /* host address for the demo server */
 const DEFAULT_PORT = 11111;                     /* host port for the demo server */
 const DEFAULT_UART = '/dev/ttyUSB0';            /* default serial port connected to a msba2 */
+const WATCH_PORT   = 44445;                     /* listen to connections from watch on this port */
 
 /**
  * Event IDs
@@ -37,7 +38,7 @@ const EVT_RESET             = 8;
  */
 var net = require('net');
 var JsonSocket = require('json-socket');
-var serialPort = require('serialport');
+var serialPort = require('serialport')
 var SerialPort = serialPort.SerialPort;
 var readline = require('readline');
 
@@ -47,6 +48,7 @@ var readline = require('readline');
 var host = DEFAULT_HOST;
 var port = DEFAULT_PORT;
 var dev = DEFAULT_UART;
+var watch_socket = net.createServer();
 var socket = new JsonSocket(new net.Socket());  /* connection to the demo host */
 var isConnected = false;                        /* flag signals when connected to the host */
 var uart = null;
@@ -144,12 +146,37 @@ rl.on('line', function(data) {
 });
 
 /**
+ * Setup connection to watches
+ */
+watch_socket.on('connection', function(sock) {
+    console.log("WATCH:    New connection from" + sock);
+    sock = new JsonSocket(sock);
+    sock.on('message', function(evt) {
+        console.log("WATCH:  Event - id:" + evt.id + ", data:" + evt.data + " --- DST:" + evt.dst);
+        if (evt.dst == 'web' && isConnected) {
+            socket.sendMessage(evt);
+        } else {
+            var line = "fw " + data.dst + " " + data.id + " " + data.data + "\n";
+            uart.write(line);
+            console.log(line);
+        }
+        var viz = {'id': VIZ_DTA_RCVD, 'data': 23, 'src': 'watch'};
+        if (isConnected) {
+            socket.sendMessage(viz);
+        }
+    });
+});
+
+/**
  * Bootstrapping and starting the portal
  */
 console.log("RIOT Portal - CeBIT edition");
 console.log("Usage: $node portal.js [DEV] [HOST] [PORT]\n");
 parseCommandLineArgs();
 console.log("INFO:   Opening RIOT at " + dev + " and socket to " + host + ":" + port + "\n");
+watch_socket.listen(WATCH_PORT, function() {
+    console.info("WATCH:  Listening on port " + WATCH_PORT);
+});
 connect();
 
 /**
