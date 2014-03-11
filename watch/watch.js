@@ -41,7 +41,7 @@ const EVT_RESET             = 8;
 /**
  * Interested nodes
  */
-const LISTEN_NODES = ['web', 41];
+const LISTEN_NODES = ['web', 51];
 
 /**
  * Library imports
@@ -139,7 +139,7 @@ function btnEvent(button) {
 }
 
 function sendEvent(id) {
-    var evt = {'id': id, 'data': next_evt++, 'src': 'watch'};
+    var evt = {'id': id, 'data': next_evt++, 'src': 'watch', 'time': new Date().getTime()};
     LISTEN_NODES.forEach(function(node) {
         evt.dst = node;
         socket.sendMessage(evt);
