@@ -152,12 +152,19 @@ watch_socket.on('connection', function(sock) {
     console.log("WATCH:    New connection from" + sock);
     sock = new JsonSocket(sock);
     sock.on('message', function(evt) {
-        console.log("WATCH:  Event - id:" + evt.id + ", data:" + evt.data + " --- DST:" + evt.dst);
-        if (evt.dst == 'web' && isConnected) {
-            socket.sendMessage(evt);
-        } else {
-            var line = "fw " + data.dst + " " + data.id + " " + data.data + "\n";
-            uart.write(line);
+        console.log('WATCH:  Event', evt);
+        if (evt.dst == 'web') {
+            console.log('WATCH:  forwarding event to \'web\'');
+            if (isConnected) {
+                socket.sendMessage(evt);
+            }
+        } else if (typeof(evt.dst) == 'number') {
+            console.log('WATCH:  forwarding event to ' + evt.dst);
+            var line = 'fw ' + evt.dst + ' ' + evt.id + ' ' + evt.data + '\n';
+            console.log("LINE:  ", line);
+            if (uart) {
+                uart.write(line);
+            }
             console.log(line);
         }
         var viz = {'id': VIZ_DTA_RCVD, 'data': 23, 'src': 'watch'};
