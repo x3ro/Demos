@@ -29,6 +29,16 @@
 			}
 		},
 		{
+		"id": "watch",
+		"params": {
+			"label": 	"Watch",
+			"color": 	"#cc2222",
+			"size": 	10,
+			"x": 		15,
+			"y": 		65
+			}
+		},
+		{
 		"id": "23",
 		"params": {
 			"label": 	"Gateway",

@@ -61,6 +61,7 @@ rpl_parents['41'] = 33;
 rpl_parents['32'] = 33;
 rpl_parents['33'] = 31;
 rpl_parents['31'] = 23;
+rpl_parents['watch'] = 23;
 var next_evt_id = 1;
 
 /**
