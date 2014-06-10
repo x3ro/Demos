@@ -10,6 +10,13 @@ export RIOTBASE ?= $(CURDIR)/../../../RIOT
 # Change this to 0 show compiler invocation lines by default:
 export QUIET ?= 1
 
+# Configure the behavior of the node
+ifeq ($(strip $(ID)),)
+export CFLAGS += -DID=0
+else
+export CFLGAS += -DID=$(ID)
+endif
+
 
 USEMODULE += shell
 USEMODULE += shell_commands
