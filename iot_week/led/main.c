@@ -16,8 +16,9 @@ int main(void)
     /* we assume the transceiver is started! */
     set_channel(DEMO_CHANNEL);
     set_address(DEMO_OWN_ADDRESS);
-    start_demo();
+    printf("CHANNEL: %d\tADDRESS: %d\n", DEMO_CHANNEL, DEMO_OWN_ADDRESS);
 
+    start_demo();
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);
