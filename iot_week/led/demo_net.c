@@ -118,8 +118,7 @@ static void demo_send_to(char *ip, char *content)
                len, ipv6_addr_to_str(addr_str, IPV6_MAX_ADDR_STR_LEN, &dest));
     }
 
-    /* missing not exposed close() function
-     close(sock) */;
+     close(sock);
 }
 
 static char *pad(char *content)
@@ -220,12 +219,13 @@ static void init_udp_server(void)
 
         if (recsize < 0) {
             printf("ERROR: recsize < 0!\n");
+            break;
         }
 
         printf("UDP packet received, payload: %s\n", buffer_main);
     }
 
-    /* missing not exposed close() function
-     close(sock) */;
+    printf("ERROR: stopping udp server!\n");
+    close(sock);
 }
 
