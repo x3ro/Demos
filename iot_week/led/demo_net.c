@@ -196,7 +196,7 @@ static void init_udp_server(void)
 {
     sockaddr6_t sa;
     char buffer_main[UDP_BUFFER_SIZE];
-    int32_t recsize;
+    int recsize;
     uint32_t fromlen;
     int sock, status;
 
@@ -222,7 +222,7 @@ static void init_udp_server(void)
             break;
         }
 
-        printf("UDP packet received, payload: %s\n", buffer_main);
+        printf("UDP packet received, payload: '%s' size: %d\n", buffer_main, recsize);
     }
 
     printf("ERROR: stopping udp server!\n");
