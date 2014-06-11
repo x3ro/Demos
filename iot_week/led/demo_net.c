@@ -109,7 +109,7 @@ static void demo_send_to(char *ip, char *content)
     memcpy(&sa.sin6_addr, &dest, 16);
     sa.sin6_port = HTONS(SERVER_PORT);
 
-    len = sendto(sock, content, strlen(content) + 1, 0, (struct sockaddr*) &sa,
+    len = sendto(sock, content, strlen(content), 0, (struct sockaddr*) &sa,
                    sizeof sa);
     if (len < 0) {
         printf("Error sending packet!\n");
