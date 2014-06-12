@@ -2,7 +2,7 @@
 export APPLICATION = iotweek_portal
 
 # If no BOARD is found in the environment, use this default:
-export BOARD ?= native
+export BOARD ?= msba2
 
 # This has to be the absolute path to the RIOT base directory:
 export RIOTBASE ?= $(CURDIR)/../../../RIOT

@@ -10,7 +10,6 @@ export RIOTBASE ?= $(CURDIR)/../../../RIOT
 # Change this to 0 show compiler invocation lines by default:
 export QUIET ?= 1
 
-
 USEMODULE += shell
 USEMODULE += shell_commands
 USEMODULE += posix

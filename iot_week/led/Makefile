@@ -28,5 +28,7 @@ USEMODULE += defaulttransceiver
 USEMODULE += sixlowpan
 USEMODULE += config
 USEMODULE += destiny
+USEMODULE += color
+USEMODULE += rgbled
 
 include $(RIOTBASE)/Makefile.include
