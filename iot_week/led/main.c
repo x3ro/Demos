@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2014 Freie Universität Berlin
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser General
+ * Public License v2.1. See the file LICENSE in the top level directory for more
+ * details.
+ */
+
+/**
+ * @file
+ * @brief       Main bootstrapping and shell setup
+ *
+ * @author      Christian Mehlis <christian.mehlis@fu-berlin.de>
+ * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
+ */
+
 #include <stdio.h>
 
 #include "posix_io.h"
@@ -10,14 +26,11 @@
 #include "../common/netsetup.h"
 #include "../common/net.h"
 #include "led.h"
-#include "game_led.h"
 
 
 static char led_stack[KERNEL_CONF_STACKSIZE_MAIN];
-static char game_stack[KERNEL_CONF_STACKSIZE_MAIN];
 
 int led_pid;
-int game_pid;
 
 const shell_command_t shell_commands[] = {
     {"send", "send data through udp", shell_send},
@@ -39,9 +52,6 @@ int main(void)
     /* start led and game threads */
     led_pid = thread_create(led_stack, KERNEL_CONF_STACKSIZE_MAIN, PRIORITY_MAIN - 2, CREATE_STACKTEST,
                             led_thread, "led ctrl");
-    game_pid = thread_create(game_stack, KERNEL_CONF_STACKSIZE_MAIN, PRIORITY_MAIN - 1, CREATE_STACKTEST,
-                            game_led_thread, "game");
-
     /* start shell */
     posix_open(uart0_handler_pid, 0);
     shell_t shell;

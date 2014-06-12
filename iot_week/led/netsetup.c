@@ -2,22 +2,23 @@
  * Copyright (C) 2014 Freie Universität Berlin
  *
  * This file is subject to the terms and conditions of the GNU Lesser General
- * Public License. See the file LICENSE in the top level directory for more
+ * Public License v2.1. See the file LICENSE in the top level directory for more
  * details.
  */
 
 /**
- * @ingroup     examples
- * @{
- *
+ * @author Hauke Petersen <hauke.petersen@fu-berlin.de>
+ */
+
+
+/**
  * @file
- * @brief       Posix UDP Server/Client example
+ * @brief       Posix UDP Server/Client setup
  *
  * @author      Jonatan Zint <j.zint@fu-berlin.de>
  * @author      Nico von Geyso <nico.geyso@fu-berlin.de>
+ * @author      Christian Mehlis <christian.mehlis@fu-berlin.de>
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
- *
- * @}
  */
 
 #include <unistd.h>
