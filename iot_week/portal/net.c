@@ -22,7 +22,7 @@
 #include "../common/net.h"
 #include "../common/netsetup.h"
 
-extern int led_pid;
+extern int ref_pid;
 
 
 void net_send(net_cmd_t *cmd)
@@ -30,19 +30,26 @@ void net_send(net_cmd_t *cmd)
     int size = sizeof(cmd);
     char *data = (char *)cmd;
 
-    netsetup_send_to(CONFIG_NEIGHBOR_P1_TOKEN, data, size);
-    netsetup_send_to(CONFIG_NEIGHBOR_P2_TOKEN, data, size);
-    netsetup_send_to(CONFIG_NEIGHBOR_P1_LED, data, size);
-    netsetup_send_to(CONFIG_NEIGHBOR_P2_LED, data, size);
-    netsetup_send_to(CONFIG_NEIGHBOR_PORTAL, data, size);
+    netsetup_send_to(CONFIG_N0, data, size);
+    vtimer_usleep(10 * 1000);
+    netsetup_send_to(CONFIG_N1, data, size);
+    vtimer_usleep(10 * 1000);
+    netsetup_send_to(CONFIG_N2, data, size);
+    vtimer_usleep(10 * 1000);
+    netsetup_send_to(CONFIG_N3, data, size);
 }
 
 void net_receive(char *data, int length)
 {
     net_cmd_t *cmd;
+    msg_t msg;
 
     if (length == sizeof(net_cmd_t)) {
         cmd = (net_cmd_t*)data;
         printf("cmd: player[%i] msg[%i] value[%i]\n", cmd->player, cmd->msg, cmd->value);
+
+        msg.type = cmd->msg;
+        msg.content.ptr = (char *)cmd;
+        msg_send_receive(&msg, &msg, ref_pid);
     }
 }

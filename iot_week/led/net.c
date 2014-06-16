@@ -17,8 +17,10 @@
 #include <stdlib.h>
 
 #include "msg.h"
+#include "vtimer.h"
 
 #include "../common/config.h"
+#include "../common/game.h"
 #include "../common/net.h"
 #include "../common/netsetup.h"
 
@@ -27,14 +29,41 @@ extern int led_pid;
 
 void net_send(net_cmd_t *cmd)
 {
-    int size = sizeof(cmd);
+    int size = sizeof(net_cmd_t);
     char *data = (char *)cmd;
 
-    netsetup_send_to(CONFIG_NEIGHBOR_P1_TOKEN, data, size);
-    netsetup_send_to(CONFIG_NEIGHBOR_P2_TOKEN, data, size);
-    netsetup_send_to(CONFIG_NEIGHBOR_P1_LED, data, size);
-    netsetup_send_to(CONFIG_NEIGHBOR_P2_LED, data, size);
-    netsetup_send_to(CONFIG_NEIGHBOR_PORTAL, data, size);
+    netsetup_send_to(CONFIG_N0, data, size);
+    netsetup_send_to(CONFIG_N1, data, size);
+    netsetup_send_to(CONFIG_N2, data, size);
+    netsetup_send_to(CONFIG_N3, data, size);
+}
+
+void net_send_go(void)
+{
+    net_cmd_t cmd;
+    cmd.msg = MSG_GAME_GO;
+    cmd.player = PLAYER;
+
+    int size = sizeof(net_cmd_t);
+    char *data = (char *)&cmd;
+
+    netsetup_send_to(CONFIG_N0, data, size);
+    vtimer_usleep(10 * 1000);
+    netsetup_send_to(CONFIG_N1, data, size);
+}
+
+void net_send_over(void)
+{
+    net_cmd_t cmd;
+    cmd.msg = MSG_GAME_OVER;
+    cmd.player = PLAYER;
+
+    int size = sizeof(net_cmd_t);
+    char *data = (char *)&cmd;
+
+    netsetup_send_to(CONFIG_N0, data, size);
+    vtimer_usleep(10 * 1000);
+    netsetup_send_to(CONFIG_N1, data, size);
 }
 
 void net_receive(char *data, int length)
@@ -48,6 +77,7 @@ void net_receive(char *data, int length)
 
         msg.type = (uint16_t)cmd->msg;
         msg.content.value = (uint32_t)cmd->value;
+        printf("net: sending msg to %i \n", led_pid);
         msg_send(&msg, led_pid, 1);
     }
 }

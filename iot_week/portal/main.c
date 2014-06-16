@@ -20,7 +20,9 @@
 #include "posix_io.h"
 #include "shell.h"
 #include "board_uart0.h"
+#include "thread.h"
 
+#include "referee.h"
 #include "../common/config.h"
 #include "../common/netsetup.h"
 #include "../common/net.h"
@@ -32,6 +34,10 @@ const shell_command_t shell_commands[] = {
     {"fw", "forward data into WSN", forward},
     {NULL, NULL, NULL}
 };
+
+static char ref_stack[KERNEL_CONF_STACKSIZE_MAIN];
+
+int ref_pid;
 
 
 void forward(int argc, char **argv)
@@ -57,6 +63,10 @@ int main(void)
     netsetup_register_ondata(net_receive);
     printf("CHANNEL: %d\tADDRESS: %d\n", CONFIG_CHANNEL, CONFIG_OWN_ADDRESS);
     netsetup_start();
+
+    /* start referee threads */
+    ref_pid = thread_create(ref_stack, KERNEL_CONF_STACKSIZE_MAIN, PRIORITY_MAIN - 2, CREATE_STACKTEST,
+                            referee_thread, "referee");
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);

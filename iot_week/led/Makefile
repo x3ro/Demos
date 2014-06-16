@@ -11,10 +11,10 @@ export RIOTBASE ?= $(CURDIR)/../../../RIOT
 export QUIET ?= 1
 
 # Configure the behavior of the node
-ifeq ($(strip $(ID)),)
-export CFLAGS += -DID=0
+ifeq ($(strip $(P2)),)
+export CFLAGS += -DI_AM_P1_LED
 else
-export CFLGAS += -DID=$(ID)
+export CFLGAS += -DI_AM_P2_LED
 endif
 
 

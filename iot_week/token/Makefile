@@ -10,6 +10,13 @@ export RIOTBASE ?= $(CURDIR)/../../../RIOT
 # Change this to 0 show compiler invocation lines by default:
 export QUIET ?= 1
 
+# Configure the behavior of the node
+ifeq ($(strip $(P2)),)
+export CFLAGS += -DI_AM_P1_TOKEN
+else
+export CFLAGS += -DI_AM_P2_TOKEN
+endif
+
 USEMODULE += shell
 USEMODULE += shell_commands
 USEMODULE += posix

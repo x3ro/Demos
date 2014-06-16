@@ -23,6 +23,7 @@
 
 #include "led.h"
 #include "color.h"
+#include "../common/config.h"
 #include "../common/game.h"
 #include "../common/net.h"
 
@@ -33,25 +34,21 @@
 static color_rgb_t cd_sequ[GAME_LED_COUNTDOWN_LEN] = GAME_LED_COUNTDOWN;
 static color_rgb_t win_sequ[GAME_LED_WIN_LEN] = GAME_LED_WIN;
 static color_rgb_t lose_sequ[GAME_LED_LOSE_LEN] = GAME_LED_LOSE;
+static color_rgb_t draw_sequ[GAME_LED_DRAW_LEN] = GAME_LED_DRAW;
 
-static uint16_t last_cmd;
+static uint16_t last_cmd = 0xffff;
 
 
 static void notify_done(void)
 {
-    net_cmd_t cmd;
-
-    cmd.player = PLAYER;
-    cmd.value = 0;
-
     switch (last_cmd) {
         case MSG_GAME_START:
-            cmd.msg = MSG_GAME_GO;
-            net_send(&cmd);
+            puts("led: sending GAME_GO message");
+            net_send_go();
             break;
         case MSG_GAME_SCORE:
-            cmd.msg = MSG_GAME_OVER;
-            net_send(&cmd);
+            puts("led: sending GAME_OVER message");
+            net_send_over();
             break;
     }
 }
@@ -83,6 +80,10 @@ void led_thread(void)
     while (1) {
         /* see if something has come up */
         if (state == limit) {
+            notify_done();
+            ++state;
+        }
+        if (state >= limit) {
             ret = msg_receive(&msg);
         } else {
             ret = msg_try_receive(&msg);
@@ -90,20 +91,30 @@ void led_thread(void)
 
         /* if message was receive, act on it */
         if (ret == 1) {
+            printf("led: got message %i\n", msg.type);
             if (msg.type != last_cmd) {
                 switch (msg.type) {
                     case MSG_GAME_START:
+                        puts("led: starting game");
                         sequ = cd_sequ;
                         state = 1;
                         limit = GAME_LED_COUNTDOWN_LEN;
                         last_cmd = msg.type;
                         break;
                     case MSG_GAME_SCORE:
-                        if (PLAYER & msg.content.value) {
+                        printf("led: displaying score: %i\n", (unsigned int)msg.content.value);
+                        if (PLAYER == msg.content.value) {
+                            puts("led: WIN sequence");
                             sequ = win_sequ;
                             limit = GAME_LED_WIN_LEN;
                         }
+                        else if (msg.content.value == GAME_STATE_DRAW) {
+                            puts("led: DRAW sequence");
+                            sequ = draw_sequ;
+                            limit = GAME_LED_DRAW_LEN;
+                        }
                         else {
+                            puts("led: LOSE sequence");
                             sequ = lose_sequ;
                             limit = GAME_LED_LOSE_LEN;
                         }
@@ -117,11 +128,19 @@ void led_thread(void)
         if (state < limit) {
             /* update color */
             if (step == 0) {
+                printf("led: setting color fr 0x%02x 0x%02x 0x%02x\n",
+                       sequ[state - 1].r, sequ[state - 1].g, sequ[state - 1].b);
+                printf("led: setting color to 0x%02x 0x%02x 0x%02x\n",
+                       sequ[state].r, sequ[state].g, sequ[state].b);
+
                 color_rgb2hsv(&sequ[state - 1], &hsv_0);
                 color_rgb2hsv(&sequ[state ], &hsv_1);
+
                 step_h = (hsv_0.h - hsv_1.h) / STEPS;
                 step_s = (hsv_0.s - hsv_1.s) / STEPS;
                 step_v = (hsv_0.v - hsv_1.v) / STEPS;
+                printf("led: steps are h+= %i s+= %i v+= %i\n", (int)(step_h * 100),(int)(step_s * 100),
+                                                                (int)(step_v * 100));
             }
 
             /* set color */
@@ -136,7 +155,6 @@ void led_thread(void)
             if (step == STEPS) {
                 step = 0;
                 ++state;
-                notify_done();
             }
         }
 

@@ -52,6 +52,8 @@ int main(void)
     /* start led and game threads */
     led_pid = thread_create(led_stack, KERNEL_CONF_STACKSIZE_MAIN, PRIORITY_MAIN - 2, CREATE_STACKTEST,
                             led_thread, "led ctrl");
+    printf("main: created LED-THREAD with PID %i\n", led_pid);
+
     /* start shell */
     posix_open(uart0_handler_pid, 0);
     shell_t shell;

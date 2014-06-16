@@ -18,4 +18,4 @@
 
 void led_thread(void);
 
-#endif __LED_H
+#endif /* __LED_H */

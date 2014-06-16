@@ -17,7 +17,6 @@ void start_seq(void)
 {
     int reading = 1;
     msg_t msg;
-    net_cmd_t cmd;
     int progress = 0;
     int last_pos = acc_current_pos;
 
@@ -25,7 +24,7 @@ void start_seq(void)
 
     while (reading) {
         if (msg_try_receive(&msg) > 0) {
-            if (msg.content.value == MSG_GAME_START) {
+            if (msg.type == MSG_GAME_START) {
                 puts("game: got MSG_GAME_START");
                 reading = 0;
             }
@@ -37,10 +36,7 @@ void start_seq(void)
                 ++progress;
                 if (progress == GAME_START_SEQ_LEN) {
                     puts("game: detected start sequence, will start game now");
-                    cmd.player = PLAYER;
-                    cmd.msg = MSG_GAME_STATE;
-                    cmd.value = acc_current_pos;
-                    net_send(&cmd);
+                    net_send_start(acc_current_pos);
 
                     progress = 0;
                     reading = 0;
@@ -59,10 +55,12 @@ void wait_for_go(void)
     msg_t msg;
     int waiting = 1;
 
+    puts("game: now waiting for GAME_GO message");
+
     while (waiting) {
         msg_receive(&msg);
-        if (msg.content.value == MSG_GAME_GO) {
-            puts("game: got go signal");
+        if (msg.type == MSG_GAME_GO) {
+            puts("game: got GAME_GO message");
             waiting = 0;
         }
     }
@@ -70,12 +68,11 @@ void wait_for_go(void)
 
 void read_pos(void)
 {
-    net_cmd_t cmd;
+    puts("game: acquiring sensors position");
 
-    cmd.player = PLAYER;
-    cmd.msg = MSG_GAME_STATE;
-    cmd.value = (uint8_t)acc_current_pos;
-    net_send(&cmd);
+    net_send_state(acc_current_pos);
+
+    puts("game: send GAME_STATE message");
 }
 
 void idle(void)
@@ -83,10 +80,14 @@ void idle(void)
     msg_t msg;
     int idling = 1;
 
+    puts("game: waiting for GAME_OVER");
+
     do {
         msg_receive(&msg);
-        if (msg.content.value == MSG_GAME_OVER);
-        idling = 0;
+        if (msg.type == MSG_GAME_OVER) {
+            puts("game: got GAME_OVER");
+            idling = 0;
+        }
     } while (idling);
 }
 

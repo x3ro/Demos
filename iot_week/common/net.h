@@ -30,4 +30,10 @@ void net_send(net_cmd_t *cmd);
 
 void net_receive(char *data, int length);
 
+void net_send_start(int c);
+void net_send_state(int c);
+
+void net_send_go(void);
+void net_send_over(void);
+
 #endif /* __NET_H */

@@ -94,6 +94,8 @@ void netsetup_send_to(char *ip, char *content, int length)
     /* neighbour discovery protocol buggy in RIOT, so we need to add
        neighbours manually. */
     if (!ndp_neighbor_cache_search(&dest)) {
+        printf("netsetup: address not in neighbor-cache: %s\n",
+                ipv6_addr_to_str(addr_str, IPV6_MAX_ADDR_STR_LEN, &dest));
         ndp_neighbor_cache_add(IF_ID, &dest, &(dest.uint16[7]), 2, 0,
                                NDP_NCE_STATUS_REACHABLE,
                                NDP_NCE_TYPE_TENTATIVE,
@@ -117,7 +119,7 @@ void netsetup_send_to(char *ip, char *content, int length)
     if (len < 0) {
         printf("Error sending packet!\n");
     } else {
-        printf("\nSuccessful deliverd %i bytes over UDP to %s to 6LoWPAN\n",
+        printf("Successful deliverd %i bytes over UDP to %s to 6LoWPAN\n",
                len, ipv6_addr_to_str(addr_str, IPV6_MAX_ADDR_STR_LEN, &dest));
     }
 
@@ -159,7 +161,7 @@ static void netsetup_udp_server(void)
             break;
         }
 
-        printf("UDP packet received, payload: '%s' size: %d\n", buffer_main, recsize);
+        /*printf("UDP packet received, payload: '%s' size: %d\n", buffer_main, recsize); */
         on_data(buffer_main, recsize);
     }
 
