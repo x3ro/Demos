@@ -1,0 +1,14 @@
+*.o
+doc/doxygen/html
+doc/doxygen/latex
+doc/doxygen/man
+doc/doxygen/*.log
+*bin
+*~
+*.orig
+.*.swp
+cachegrind.out*
+.project
+.cproject
+.settings
+/toolchain
