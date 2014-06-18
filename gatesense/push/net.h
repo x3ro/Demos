@@ -22,8 +22,8 @@
 typedef struct {
     uint16_t id;
     uint16_t seq;
-    uint16_t temperature;
-    uint16_t humidity;
+    uint32_t temperature;
+    uint32_t humidity;
 } sense_data_t;
 
 void net_send(float relhum, float relhum_temp, float temperature);

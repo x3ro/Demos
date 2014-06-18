@@ -15,5 +15,5 @@
 
 #define CONFIG_CHANNEL 10
 #define CONFIG_SINK "fe80::ff:fe00:2"
-#define CONFIG_OWN_ADDRESS 1
+#define CONFIG_OWN_ADDRESS 3
 

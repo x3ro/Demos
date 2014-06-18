@@ -27,7 +27,6 @@
 
 int sensor_read(sht11_val_t *sht11_val)
 {
-
     return sht11_read_sensor(sht11_val, HUMIDITY | TEMPERATURE);
 }
 
@@ -36,14 +35,16 @@ void sensor_thread(void)
     while (1) {
         sht11_val_t sht11_val;
         int success = sensor_read(&sht11_val);
-        
-        printf("Relative humidity: %5.2f%% / Temperature compensated humidity; %5.2f%% ",
-               (double) sht11_val.relhum, (double) sht11_val.relhum_temp);
-        printf("Temperature: %-6.2f°C\n", (double) sht11_val.temperature);
-
+#if 0   
+        if (success) {
+            printf("Relative humidity: %5.2f%% / Temperature compensated humidity; %5.2f%% ",
+                   (double) sht11_val.relhum, (double) sht11_val.relhum_temp);
+            printf("Temperature: %-6.2f°C\n", (double) sht11_val.temperature);
+        }
+#endif
         net_send(sht11_val.relhum, sht11_val.relhum_temp, sht11_val.temperature);
     
-        vtimer_usleep(100 * 1000);
+        vtimer_usleep(1000 * 1000);
     }
 }
 

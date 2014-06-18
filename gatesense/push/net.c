@@ -15,8 +15,8 @@ void net_send(float relhum, float relhum_temp, float temperature)
     sense_data_t sensor_data;
     sensor_data.id = CONFIG_OWN_ADDRESS;
     sensor_data.seq = seq++;
-    sensor_data.humidity = (uint16_t) relhum;
-    sensor_data.temperature = (uint16_t) temperature;
+    sensor_data.humidity = (uint32_t) (relhum * 1000);
+    sensor_data.temperature = (uint32_t) (temperature * 1000);
 
     int size = sizeof(sense_data_t);
     char *data = (char *)&sensor_data;
