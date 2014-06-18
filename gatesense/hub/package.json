@@ -1,0 +1,15 @@
+{
+  "name": "cloud-hub",
+  "version": "0.1.0",
+  "description": "RIOT Cloud Hub",
+  "main": "hub.js",
+  "repository": "",
+  "author": "Hauke Petersen <hauke.petersen@fu-berlin.de",
+  "license": "LGPLv2.1",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "coap": "*",
+    "cbor": "*",
+    "serialport": "*"
+  }
+}
