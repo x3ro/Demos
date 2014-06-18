@@ -30,6 +30,5 @@ void netsetup_register_ondata(void (*cb)(char *data, int length));
 void netsetup_start(void);
 
 void netsetup_send_to(char *ip, char *content, int length);
-void shell_send(int argc, char **argv);
 
 #endif /* __NETSETUP_H */

@@ -208,14 +208,3 @@ void netsetup_start(void)
     }
 }
 
-void shell_send(int argc, char **argv)
-{
-    if (argc < 2) {
-        printf("Usage: send <ipv6address> <msg>\n");
-        return;
-    }
-
-    printf("Shell sends %i bytes\n", strlen(argv[2]));
-
-    netsetup_send_to(argv[1], argv[2], strlen(argv[2]));
-}

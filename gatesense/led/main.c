@@ -36,7 +36,6 @@ static char led_stack[KERNEL_CONF_STACKSIZE_MAIN];
 int led_pid;
 
 const shell_command_t shell_commands[] = {
-    {"send", "send data through udp", shell_send},
     {NULL, NULL, NULL}
 };
 
