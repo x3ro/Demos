@@ -30,8 +30,6 @@
 #include "netsetup.h"
 #include "net.h"
 
-static char sensor_stack[KERNEL_CONF_STACKSIZE_MAIN];
-
 int sensor_pid;
 
 const shell_command_t shell_commands[] = {

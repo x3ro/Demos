@@ -25,7 +25,7 @@
 
 void netsetup_set_address(radio_address_t a);
 void netsetup_set_channel(int32_t c);
-void netsetup_register_ondata(void (*cb)(char *data, int length));
+void netsetup_register_ondata(void (*cb)(char *from, char *data, int length));
 
 void netsetup_start(void);
 

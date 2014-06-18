@@ -37,11 +37,10 @@
 #define SERVER_PORT 8443
 #define UDP_BUFFER_SIZE     (128)
 
-
 char udp_server_stack_buffer[KERNEL_CONF_STACKSIZE_MAIN];
 char addr_str[IPV6_MAX_ADDR_STR_LEN];
 
-void (*on_data)(char *data, int length);
+void (*on_data)(char *from, char *data, int length);
 
 
 void netsetup_set_address(radio_address_t a)
@@ -126,7 +125,7 @@ void netsetup_send_to(char *ip, char *content, int length)
      close(sock);
 }
 
-void netsetup_register_ondata(void (*cb)(char *data, int length))
+void netsetup_register_ondata(void (*cb)(char *from, char *data, int length))
 {
     on_data = cb;
 }
@@ -162,7 +161,11 @@ static void netsetup_udp_server(void)
         }
 
        /* printf("UDP packet received, payload: '%s' size: %d\n", buffer_main, recsize); */
-        if (on_data) on_data(buffer_main, recsize);
+        if (on_data) {
+            static char addr_str[IPV6_MAX_ADDR_STR_LEN];
+            inet_ntop(AF_INET6, &(sa.sin6_addr), addr_str, IPV6_MAX_ADDR_STR_LEN);
+            on_data(addr_str, buffer_main, recsize);
+        }
     }
 
     printf("ERROR: stopping udp server!\n");
