@@ -1,0 +1,14 @@
+{
+  "name": "cloud-grepper",
+  "version": "0.1.0",
+  "description": "RIOT Cloud Grepper",
+  "main": "grepper.js",
+  "repository": "",
+  "author": "Hauke Petersen <hauke.petersen@fu-berlin.de",
+  "license": "LGPLv2.1",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "ws": "*",
+    "serialport": "*"
+  }
+}
