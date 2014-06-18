@@ -26,9 +26,37 @@
 #include "config.h"
 #include "net.h"
 
-void update_hsv(color_hsv_t *hsv, uint32_t new_val, uint32_t old_value)
+
+#define TEMP_MAX        (35000.0f)
+#define TEMP_MIN        (20000.0f)
+#define HUM_MAX         (95000.0f)
+#define HUM_MIN         (35000.0f)
+
+#define HUE_MAX         (310.0f)
+
+
+void update_hsv(color_hsv_t *hsv, float val, int type)
 {
-    hsv->h = (new_val / 20) * 360;
+    if (type == NODE_LED_TEMPERATURE) {
+        val -= TEMP_MIN;
+        val = (TEMP_MAX - TEMP_MIN) / val;
+    }
+    else if (type == NODE_LED_HUMIDITY) {
+        val -= HUM_MIN;
+        val = (HUM_MAX - HUM_MIN) / val;
+    }
+    else {
+        return;
+    }
+
+    if (val < 0.0f) {
+        val = 0.0f);
+    }
+    else if (val > 1.0f) {
+        val = 1.0f;
+    }
+
+    hsv->h = val * HUE_MAX;
 }
 
 void led_thread(void)
@@ -36,27 +64,37 @@ void led_thread(void)
     msg_t msg;
     rgbled_t led;
     color_hsv_t hsv;
-    hsv.h = 1.0f;
+    color_rgb_t rgb;
+
+    hsv.h = 0.0f;
     hsv.s = 1.0f;
     hsv.v = 1.0f;
-    color_rgb_t rgb;
-    
-    uint32_t new_val = 0;
-    uint32_t old_val = 0;
+
+    float val;
 
     /* initialize RGB-LED */
     rgbled_init(&led, PWM_0, 0, 1, 2);
 
+    /* go threw the base colors */
+    rgb = {255, 0, 0};
+    rgbled_set(&led, &rgb);
+    vtimer_usleep(1000 * 1000);
+    rgb = {0, 255, 0};
+    rgbled_set(&led, &rgb);
+    vtimer_usleep(1000 * 1000);
+    rgb = {0, 0, 255};
+    rgbled_set(&led, &rgb);
+
     while (1) {
         /* see if something has come up */
         msg_receive(&msg);
-        new_val = msg.content.value;
-        
-        update_hsv(&hsv, new_val, old_val);
-        
+        val = (float)msg.content.value;
+
+        /* calculate new color */
+        update_hsv(&hsv, val, msg.type);
+
          /* set color */
         color_hsv2rgb(&hsv, &rgb);
         rgbled_set(&led, &rgb);
-        old_val = new_val;
     }
 }
