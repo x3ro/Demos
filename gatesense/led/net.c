@@ -15,6 +15,8 @@ void net_receive(char *data, int length)
     sense_data_t *sensor_data;
     msg_t msg;
 
+    printf("net: CALLED RECEIVE, packet length %i\n", length);
+
     if (length == sizeof(sense_data_t)) {
         sensor_data = (sense_data_t *) data;
         printf("net: got sensor data - humidity: %" PRIu32 "; temperature: %" PRIu32 "\n", sensor_data->humidity, sensor_data->temperature);

@@ -43,7 +43,6 @@ char addr_str[IPV6_MAX_ADDR_STR_LEN];
 
 void (*on_data)(char *data, int length);
 
-
 void netsetup_set_address(radio_address_t a)
 {
     msg_t mesg;
@@ -161,8 +160,8 @@ static void netsetup_udp_server(void)
             break;
         }
 
-       /* printf("UDP packet received, payload: '%s' size: %d\n", buffer_main, recsize); */
-        if (on_data) on_data(buffer_main, recsize);
+        printf("UDP packet received, payload: '%s' size: %d\n", buffer_main, recsize);
+        on_data(buffer_main, recsize);
     }
 
     printf("ERROR: stopping udp server!\n");

@@ -14,7 +14,7 @@
 const GATESENSE_HOST = "gatesencetest.cloudapp.net";
 const GATESENSE_PORT = 7913;
 const GATESENSE_RESS = 'sensor-data';
-const PORTAL_DEV     = '/dev/ttyUSB0';
+const PORTAL_DEV     = '/dev/ttyUSB1';
 
 /**
  * define global variables from dependencies
