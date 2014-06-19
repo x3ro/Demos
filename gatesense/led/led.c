@@ -28,9 +28,9 @@
 
 
 #define TEMP_MAX        (35000.0f)
-#define TEMP_MIN        (20000.0f)
-#define HUM_MAX         (95000.0f)
-#define HUM_MIN         (35000.0f)
+#define TEMP_MIN        (27000.0f)
+#define HUM_MAX         (90000.0f)
+#define HUM_MIN         (40000.0f)
 
 #define HUE_MAX         (310.0f)
 
@@ -38,19 +38,25 @@
 void update_hsv(color_hsv_t *hsv, float val, int type)
 {
     if (type == NODE_LED_TEMPERATURE) {
+        puts("will put temp");
         val -= TEMP_MIN;
-        val = (TEMP_MAX - TEMP_MIN) / val;
+        printf("temp ist after minus %i\n", (unsigned int)val);
+        val /= (TEMP_MAX - TEMP_MIN);
+        printf("temp ist after math  %i.%i\n", (unsigned int)val, (unsigned int)(val * 1000));
     }
     else if (type == NODE_LED_HUMIDITY) {
+        puts("will put hum");
         val -= HUM_MIN;
-        val = (HUM_MAX - HUM_MIN) / val;
+        printf("hum ist after minus %i\n", (unsigned int)val);
+        val /= (HUM_MAX - HUM_MIN);
+        printf("hum ist after math %i.%i\n", (unsigned int)val, (unsigned int)(val * 1000));
     }
     else {
         return;
     }
 
     if (val < 0.0f) {
-        val = 0.0f);
+        val = 0.0f;
     }
     else if (val > 1.0f) {
         val = 1.0f;
@@ -70,25 +76,36 @@ void led_thread(void)
     hsv.s = 1.0f;
     hsv.v = 1.0f;
 
+    rgb.r = 0;
+    rgb.g = 0;
+    rgb.b = 0;
+
     float val;
 
     /* initialize RGB-LED */
-    rgbled_init(&led, PWM_0, 0, 1, 2);
+    rgbled_init(&led, PWM_0, 1, 2, 0);
 
     /* go threw the base colors */
-    rgb = {255, 0, 0};
+    rgb.r = 255;
     rgbled_set(&led, &rgb);
     vtimer_usleep(1000 * 1000);
-    rgb = {0, 255, 0};
+    rgb.r = 0;
+    rgb.g = 255;
     rgbled_set(&led, &rgb);
     vtimer_usleep(1000 * 1000);
-    rgb = {0, 0, 255};
+    rgb.g = 0;
+    rgb.b = 255;
+    rgbled_set(&led, &rgb);
+    vtimer_usleep(1000 * 1000);
+    rgb.b = 0;
     rgbled_set(&led, &rgb);
 
     while (1) {
         /* see if something has come up */
         msg_receive(&msg);
         val = (float)msg.content.value;
+
+        printf("led: got a message from net thread: %i\n", (unsigned int)val);
 
         /* calculate new color */
         update_hsv(&hsv, val, msg.type);
