@@ -20,6 +20,5 @@ USEMODULE += defaulttransceiver
 USEMODULE += sixlowpan
 USEMODULE += config
 USEMODULE += destiny
-USEMODULE += sht11
 
 include $(RIOTBASE)/Makefile.include
