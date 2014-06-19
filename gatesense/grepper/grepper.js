@@ -16,7 +16,7 @@ const GATESENSE_PORT = 9998;
 const GATESENSE_RESS = 'c3b5e102-5128-4e22-b51e-67856a04a0ab';
 const GATESENSE_URL  = 'http://gatesense.com/data/api/action/datastore_search?resource_id=';
 const GATESENSE_QUERY= '&limit=1&sort=_id desc';
-const UART_DEV       = '/dev/ttyUSB1';
+const UART_DEV       = '/dev/ttyUSB0';
 
 /**
  * define global variables from dependencies
