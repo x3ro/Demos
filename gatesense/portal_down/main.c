@@ -38,7 +38,7 @@ typedef struct {
 
 void sensor_send(int argc, char **argv)
 {
-    if (argc < 3) {
+    if (argc < 2) {
         printf("Usage: sensor <temp> <hum>\n");
         return;
     }
@@ -46,11 +46,11 @@ void sensor_send(int argc, char **argv)
     sense_data_t data;
     data.id = 0;
     data.seq = 0;
-    data.temperature = atoi(argv[2]);;
-    data.humidity = atoi(argv[3]);
+    data.temperature = atoi(argv[1]);;
+    data.humidity = atoi(argv[2]);
     
-    netsetup_send_to(CONFIG_LED, &data, sizeof(sense_data_t));
-    //netsetup_send_to(CONFIG_LED_2, hum, strlen(argv[2]));
+    netsetup_send_to(CONFIG_LED_TEMPERATURE, &data, sizeof(sense_data_t));
+    netsetup_send_to(CONFIG_LED_HUMIDITY, &data, sizeof(sense_data_t));
 }
 
 const shell_command_t shell_commands[] = {

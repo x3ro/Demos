@@ -2,7 +2,7 @@
 export APPLICATION = iotweek_gatesense_push
 
 # If no BOARD is found in the environment, use this default:
-export BOARD ?= avsextrem
+export BOARD ?= msba2
 
 # This has to be the absolute path to the RIOT base directory:
 export RIOTBASE ?= $(CURDIR)/../../../RIOT
@@ -20,6 +20,5 @@ USEMODULE += defaulttransceiver
 USEMODULE += sixlowpan
 USEMODULE += config
 USEMODULE += destiny
-USEMODULE += sht11
 
 include $(RIOTBASE)/Makefile.include

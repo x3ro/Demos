@@ -14,8 +14,7 @@
  */
 
 #define CONFIG_CHANNEL 6
-#define CONFIG_SINK "fe80::ff:fe00:2"
 #define CONFIG_OWN_ADDRESS 2
-#define CONFIG_LED "fe80::ff:fe00:0"
-#define CONFIG_LED_2 "fe80::ff:fe00:5"
+#define CONFIG_LED_TEMPERATURE "fe80::ff:fe00:3"
+#define CONFIG_LED_HUMIDITY "fe80::ff:fe00:4"
 
