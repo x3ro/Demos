@@ -58,7 +58,7 @@ client.on('end', function() {
 
     var cbor_data = cbor.encode(JSON.parse(match[2].toString()));
 
-    console.log('Response size:  ', buf.length, 'byte');
+    console.log(R'esponse size:  ', buf.length, 'byte');
     console.log('HTTP header size: ', match[1].length + 5);
     console.log('JSON body size:   ', match[2].length);
     console.log('CBOR body size:   ', cbor_data.length);
