@@ -40,7 +40,7 @@
  * @brief   Configure communication
  * @{
  */
-#define CONF_COMM_PAN               (0x2300)
+#define CONF_COMM_PAN               (0x1593)
 #define CONF_COMM_ADDR              {0x81, 0x95}
 #define CONF_COMM_CHAN              (11U)
 
