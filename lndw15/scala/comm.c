@@ -17,13 +17,14 @@
  */
 
 /**
- * @ingroup     peta
+ * @ingroup     scala
  * @{
  *
  * @file
  * @brief       Communication module
  *
  * @author      Hauke Petersen <mail@haukepetersen.de>
+ * @author      Cenk Gündoğan <cnkgndgn@gmail.com>
  *
  * @}
  */
@@ -35,7 +36,7 @@
 #include "net/ng_netapi.h"
 
 #include "comm.h"
-#include "config.h"
+#include "demo_config.h"
 
 
 void comm_init(void)

@@ -17,13 +17,14 @@
  */
 
 /**
- * @ingroup     peta
+ * @ingroup     scala
  * @{
  *
  * @file
  * @brief       Interfaces of the communication module
  *
  * @author      Hauke Petersen <mail@haukepetersen.de>
+ * @author      Cenk Gündoğan <cnkgndgn@gmail.com>
  */
 
 #ifndef COMM_H_

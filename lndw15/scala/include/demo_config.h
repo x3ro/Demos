@@ -17,17 +17,18 @@
  */
 
 /**
- * @ingroup     peta
+ * @ingroup     scala
  * @{
  *
  * @file
  * @brief       Global configuration options
  *
  * @author      Hauke Petersen <mail@haukepetersen.de>
+ * @author      Cenk Gündoğan <cnkgndgn@gmail.com>
  */
 
-#ifndef PETA_CONFIG_H
-#define PETA_CONFIG_H
+#ifndef DEMO_CONFIG_H
+#define DEMO_CONFIG_H
 
 #include "periph/gpio.h"
 #include "periph/spi.h"
@@ -49,9 +50,21 @@
 #define CONF_COMM_SCALA_ADDR        {0x61, 0x62}
 /** @} */
 
+/**
+ * @brief   Configure scala pwm
+ * @{
+ */
+#define CONF_SCALA_PWM       (PWM_1)
+#define CONF_SCALA_PWM_CHAN  (0U)
+#define CONF_SCALA_RES       (0x03ff)    /* 10-bit resolution */
+#define CONF_SCALA_MIN       (1000)
+#define CONF_SCALA_CENTER    (1500)
+#define CONF_SCALA_MAX       (2000)
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* PETA_CONFIG_H*/
+#endif /* DEMO_CONFIG_H*/
 /** @} */

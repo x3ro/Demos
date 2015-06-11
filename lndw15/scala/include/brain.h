@@ -17,13 +17,14 @@
  */
 
 /**
- * @ingroup     peta
+ * @ingroup     scala
  * @{
  *
  * @file
- * @brief       Interfaces of Peta's brain
+ * @brief       Interfaces of Scala's brain
  *
  * @author      Hauke Petersen <mail@haukepetersen.de>
+ * @author      Cenk Gündoğan <cnkgndgn@gmail.com>
  */
 
 #ifndef BRAIN_H_
@@ -34,15 +35,9 @@
 #endif
 
 /**
- * @brief   Initialize Peta and start the brain's thread
+ * @brief   Initialize Scala and start the brain's thread
  */
 void brain_init(void);
-
-void brain_set_speed(int16_t speed);
-
-void brain_steer(int16_t dir);
-
-void brain_switches(uint8_t state);
 
 #ifdef __cplusplus
 }
