@@ -112,6 +112,12 @@ void brain_init(void)
 
 void brain_scala_level(uint8_t level)
 {
-    servo_set(&scala, (level * 4) + 1000);
+    servo_set(&scala, ((CONF_SCALA_MAX - CONF_SCALA_MIN) / level) + CONF_SCALA_MIN);
+    return;
+}
+
+void brain_scala_level_raw(int level)
+{
+    servo_set(&scala, level);
     return;
 }

@@ -65,8 +65,23 @@ static int _scala_level(int argc, char **argv)
     return 0;
 }
 
+static int _scala_level_raw(int argc, char **argv)
+{
+    int level;
+    if (argc < 2) {
+        printf("usage: %s level [0 255]\n", argv[0]);
+        return 1;
+    }
+
+    level = (int) atoi(argv[1]);
+
+    brain_scala_level_raw(level);
+    return 0;
+}
+
 static const shell_command_t _commands[] = {
     { "level", "set the Scala's level [0 255]", _scala_level },
+    { "raw_level", "set the Scala's level", _scala_level_raw },
     { NULL, NULL, NULL }
 };
 

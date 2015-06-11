@@ -46,6 +46,13 @@ void brain_init(void);
  */
 void brain_scala_level(uint8_t level);
 
+/**
+ * @brief   Set the raw level of the scala
+ *
+ * @param[in] level     level of the scala
+ */
+void brain_scala_level_raw(int level);
+
 #ifdef __cplusplus
 }
 #endif

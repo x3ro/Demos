@@ -54,10 +54,10 @@
  * @brief   Configure scala pwm
  * @{
  */
-#define CONF_SCALA_PWM       (PWM_1)
+#define CONF_SCALA_PWM       (PWM_0)
 #define CONF_SCALA_PWM_CHAN  (0U)
-#define CONF_SCALA_MIN       (1000)
-#define CONF_SCALA_MAX       (2000)
+#define CONF_SCALA_MIN       (650)
+#define CONF_SCALA_MAX       (2400)
 /** @} */
 
 #ifdef __cplusplus
