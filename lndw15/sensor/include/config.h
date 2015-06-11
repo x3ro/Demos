@@ -49,6 +49,15 @@
 #define CONF_COMM_SCALA_ADDR        {0x61, 0x62}
 /** @} */
 
+/**
+ * @brief   Sensor configuration
+ * @{
+ */
+#define CONF_SENSE_ADC              (ADC_0)
+#define CONF_SENSE_CHAN             (0)
+#define CONF_SENSE_RATE             (20)    /* sample every xx millisecond */
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
