@@ -17,7 +17,7 @@
  */
 
 /**
- * @ingroup     peta
+ * @ingroup     scala
  * @{
  *
  * @file
