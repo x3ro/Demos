@@ -56,9 +56,7 @@
  */
 #define CONF_SCALA_PWM       (PWM_1)
 #define CONF_SCALA_PWM_CHAN  (0U)
-#define CONF_SCALA_RES       (0x03ff)    /* 10-bit resolution */
 #define CONF_SCALA_MIN       (1000)
-#define CONF_SCALA_CENTER    (1500)
 #define CONF_SCALA_MAX       (2000)
 /** @} */
 

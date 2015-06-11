@@ -60,7 +60,7 @@ static void _dispatch(uint8_t *data, size_t len)
 
     uint8_t level = data[1];
     printf("level: %d\n", level);
-    servo_set(&scala, (level * 4) + 1000);
+    brain_scala_level(level);
 
     return;
 }
@@ -112,6 +112,6 @@ void brain_init(void)
 
 void brain_scala_level(uint8_t level)
 {
-    servo_set(&scala, level);
+    servo_set(&scala, (level * 4) + 1000);
     return;
 }

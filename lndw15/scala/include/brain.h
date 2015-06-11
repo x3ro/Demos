@@ -44,7 +44,7 @@ void brain_init(void);
  *
  * @param[in] level     level of the scala
  */
-void brain_scala_level(unsigned int level);
+void brain_scala_level(uint8_t level);
 
 #ifdef __cplusplus
 }
