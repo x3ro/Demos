@@ -59,7 +59,7 @@ static void _dispatch(uint8_t *data, size_t len)
     }
 
     uint8_t level = data[1];
-    printf("level: %d\n", level);
+    printf("received level: %d\n", level);
     brain_scala_level(level);
 
     return;
@@ -112,7 +112,8 @@ void brain_init(void)
 
 void brain_scala_level(uint8_t level)
 {
-    servo_set(&scala, ((CONF_SCALA_MAX - CONF_SCALA_MIN) / level) + CONF_SCALA_MIN);
+    servo_set(&scala,
+            (unsigned int) (CONF_SCALA_MIN + ((double) (CONF_SCALA_MAX - CONF_SCALA_MIN) / 255) * level));
     return;
 }
 

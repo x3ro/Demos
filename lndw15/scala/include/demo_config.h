@@ -42,12 +42,10 @@
  * @{
  */
 #define CONF_COMM_PAN               (0x1593)
-#define CONF_COMM_ADDR              {0x81, 0x95}
+#define CONF_COMM_ADDR              {0x61, 0x62}
 #define CONF_COMM_CHAN              (11U)
 
 #define CONF_COMM_MSGID             (0xc5)
-
-#define CONF_COMM_SCALA_ADDR        {0x61, 0x62}
 /** @} */
 
 /**
