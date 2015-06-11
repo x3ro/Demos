@@ -17,50 +17,44 @@
  */
 
 /**
- * @ingroup     peta
+ * @ingroup     lndw15_sensor
  * @{
  *
  * @file
- * @brief       Global configuration options
+ * @brief       Interfaces of the sensing module
  *
  * @author      Hauke Petersen <mail@haukepetersen.de>
  */
 
-#ifndef PETA_CONFIG_H
-#define PETA_CONFIG_H
-
-#include "periph/gpio.h"
-#include "periph/spi.h"
+#ifndef SENSE_H_
+#define SENSE_H_
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /**
- * @brief   Configure communication
- * @{
+ * @brief   Initialize the network interface
  */
-#define CONF_COMM_PAN               (0x1593)
-#define CONF_COMM_ADDR              {0x81, 0x95}
-#define CONF_COMM_CHAN              (11U)
-
-#define CONF_COMM_MSGID             (0xc5)
-
-#define CONF_COMM_SCALA_ADDR        {0x61, 0x62}
-/** @} */
+void sense_init(kernel_pid_t radio);
 
 /**
- * @brief   Sensor configuration
- * @{
+ * @brief   Turn sensing on or off
  */
-#define CONF_SENSE_ADC              (ADC_0)
-#define CONF_SENSE_CHAN             (0)
-#define CONF_SENSE_RATE             (10 * 1000)
-/** @} */
+void sense_set_state(int s);
+
+/**
+ * @brief   Set the sampling rate
+ *
+ * @param[in] int       new rate, wait value in ms between to samples
+ */
+void sense_set_rate(unsigned int new_rate);
+
+void sense_send_data(uint8_t *pkt);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* PETA_CONFIG_H*/
+#endif /* SENSE_H_*/
 /** @} */

@@ -17,50 +17,30 @@
  */
 
 /**
- * @ingroup     peta
+ * @ingroup     lndw15_sensor
  * @{
  *
  * @file
- * @brief       Global configuration options
+ * @brief       Interfaces of the communication module
  *
  * @author      Hauke Petersen <mail@haukepetersen.de>
  */
 
-#ifndef PETA_CONFIG_H
-#define PETA_CONFIG_H
-
-#include "periph/gpio.h"
-#include "periph/spi.h"
+#ifndef COMM_H_
+#define COMM_H_
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /**
- * @brief   Configure communication
- * @{
+ * @brief   Initialize the network interface
  */
-#define CONF_COMM_PAN               (0x1593)
-#define CONF_COMM_ADDR              {0x81, 0x95}
-#define CONF_COMM_CHAN              (11U)
-
-#define CONF_COMM_MSGID             (0xc5)
-
-#define CONF_COMM_SCALA_ADDR        {0x61, 0x62}
-/** @} */
-
-/**
- * @brief   Sensor configuration
- * @{
- */
-#define CONF_SENSE_ADC              (ADC_0)
-#define CONF_SENSE_CHAN             (0)
-#define CONF_SENSE_RATE             (10 * 1000)
-/** @} */
+kernel_pid_t comm_init(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* PETA_CONFIG_H*/
+#endif /* COMM_H_*/
 /** @} */

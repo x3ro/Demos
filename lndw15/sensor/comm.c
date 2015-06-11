@@ -17,50 +17,44 @@
  */
 
 /**
- * @ingroup     peta
+ * @ingroup     lndw15_sensor
  * @{
  *
  * @file
- * @brief       Global configuration options
+ * @brief       Communication module
  *
  * @author      Hauke Petersen <mail@haukepetersen.de>
+ *
+ * @}
  */
 
-#ifndef PETA_CONFIG_H
-#define PETA_CONFIG_H
+#include <stdio.h>
 
-#include "periph/gpio.h"
-#include "periph/spi.h"
+#include "kernel.h"
+#include "net/ng_netif.h"
+#include "net/ng_netapi.h"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+#include "comm.h"
+#include "demo_config.h"
 
-/**
- * @brief   Configure communication
- * @{
- */
-#define CONF_COMM_PAN               (0x1593)
-#define CONF_COMM_ADDR              {0x81, 0x95}
-#define CONF_COMM_CHAN              (11U)
 
-#define CONF_COMM_MSGID             (0xc5)
+kernel_pid_t comm_init(void)
+{
+    kernel_pid_t ifs[NG_NETIF_NUMOF];
+    uint8_t addr[2] = CONF_COMM_ADDR;
+    uint16_t pan = CONF_COMM_PAN;
+    uint16_t chan = CONF_COMM_CHAN;
 
-#define CONF_COMM_SCALA_ADDR        {0x61, 0x62}
-/** @} */
+    /* get the PID of the first radio */
+    if (ng_netif_get(ifs) <= 0) {
+        puts("comm: ERROR during init, not radio found\n");
+        return KERNEL_PID_UNDEF;
+    }
 
-/**
- * @brief   Sensor configuration
- * @{
- */
-#define CONF_SENSE_ADC              (ADC_0)
-#define CONF_SENSE_CHAN             (0)
-#define CONF_SENSE_RATE             (10 * 1000)
-/** @} */
-
-#ifdef __cplusplus
+    /* initialize the radio */
+    puts("comm: setting address and PAN");
+    ng_netapi_set(ifs[0], NETCONF_OPT_ADDRESS, 0, &addr, 2);
+    ng_netapi_set(ifs[0], NETCONF_OPT_NID, 0, &pan, 2);
+    ng_netapi_set(ifs[0], NETCONF_OPT_CHANNEL, 0, &chan, 2);
+    return ifs[0];
 }
-#endif
-
-#endif /* PETA_CONFIG_H*/
-/** @} */
