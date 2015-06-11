@@ -39,6 +39,13 @@
  */
 void brain_init(void);
 
+/**
+ * @brief   Set the level of the scala
+ *
+ * @param[in] level     level of the scala
+ */
+void brain_scala_level(unsigned int level);
+
 #ifdef __cplusplus
 }
 #endif

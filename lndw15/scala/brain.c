@@ -53,7 +53,16 @@ static servo_t scala;
 
 static void _dispatch(uint8_t *data, size_t len)
 {
-    puts("dispatch");
+    if ((len != 2) || (data[0] != CONF_COMM_MSGID)) {
+        printf("ignore frame with payload size: %d and MSGID: %d\n", len, data[0]);
+        return;
+    }
+
+    uint8_t level = data[1];
+    printf("level: %d\n", level);
+    servo_set(&scala, (level * 4) + 1000);
+
+    return;
 }
 
 static void *_brain_thread(void *arg)
@@ -89,7 +98,7 @@ void brain_init(void)
         puts("ERROR initializing the SCALA\n");
         return;
     }
-    servo_set(&scala, CONF_SCALA_CENTER);
+    servo_set(&scala, CONF_SCALA_MIN);
 
     /* initializing network support */
     puts("init comm");
@@ -99,4 +108,10 @@ void brain_init(void)
     puts("run the brain");
     thread_create(stack, STACKSIZE, STACKPRIO, CREATE_STACKTEST, _brain_thread,
                   NULL, "brain");
+}
+
+void brain_scala_level(uint8_t level)
+{
+    servo_set(&scala, level);
+    return;
 }

@@ -51,7 +51,22 @@ static void _putc(int c)
     putchar((char)c);
 }
 
+static int _scala_level(int argc, char **argv)
+{
+    uint8_t level;
+    if (argc < 2) {
+        printf("usage: %s level [0 255]\n", argv[0]);
+        return 1;
+    }
+
+    level = (uint8_t)atoi(argv[1]);
+
+    brain_scala_level(level);
+    return 0;
+}
+
 static const shell_command_t _commands[] = {
+    { "level", "set the Scala's level [0 255]", _scala_level },
     { NULL, NULL, NULL }
 };
 
