@@ -43,3 +43,9 @@ var server = app.listen(3000, '::', function () {
 
   console.log('Example app listening at http://%s:%s', host, port);
 });
+
+var server4 = app.listen(3001, '0.0.0.0', function() {
+    var host = server4.address().address;
+    var port = server4.address().port;
+    console.log("Also listening at http://%s:%s", host, port);
+});
