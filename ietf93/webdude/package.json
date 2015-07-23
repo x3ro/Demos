@@ -1,0 +1,11 @@
+{
+  "name": "webdude",
+  "version": "0.1.0",
+  "description": "IETF93 demo - webdude",
+  "main": "webdude.js",
+  "repository": "",
+  "author": "Hauke Petersen <hauke.petersen@fu-berlin.de",
+  "dependencies": {
+    "express" : "*"
+  }
+}
