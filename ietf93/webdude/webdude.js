@@ -22,6 +22,8 @@ var express = require('express');
 var app = express();
 var sock = dgram.createSocket('udp6');
 
+app.use(express.static('.'));
+
 /* setup webserver */
 app.get('*', function (req, res) {
     if (req.url == "/party") {

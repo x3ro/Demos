@@ -1,16 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Party time</title>
+    <link rel="stylesheet" href="/bower_components/material-design-lite/material.min.css">
+    <script src="/bower_components/material-design-lite/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Party time</title>
+
+    <style>
+      .demo-card-wide.mdl-card {
+        width: 100%;
+      }
+      .demo-card-wide > .mdl-card__title {
+        color: #fff;
+        height: 176px;
+        background: url('party.gif') center / cover;
+      }
+      .demo-card-wide > .mdl-card__menu {
+        color: #fff;
+      }
+
+      .is-small-screen .mdl-button {
+        width: 100%;
+        margin-top: 10px;
+        height: 100px;
+      }
+    </style>
 </head>
 
 <body>
-<a href="/party">
-<div style="width:300px; height:200px; background-color:blue"></div>
-</a>
-<a href="/lame">
-<div style="width:300px; height:200px; background-color:red"></div>
-</a>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--overlay-drawer-button">
+    <div class="demo-grid-ruler mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col">
+
+            <div class="mdl-card mdl-shadow--2dp demo-card-wide">
+              <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">The RIOT party!</h2>
+              </div>
+              <div class="mdl-card__supporting-text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Mauris sagittis pellentesque lacus eleifend lacinia...
+              </div>
+
+              <div class="mdl-card__actions mdl-card--border">
+                <form action="/party">
+                    <button style="float: left" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                      Get this Party started!
+                    </button>
+                </form>
+
+                <form action="/lame">
+                    <button style="float: right" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                      Never mind, Party's over.
+                    </button>
+                </form>
+              </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 </body>
 
 </html>
